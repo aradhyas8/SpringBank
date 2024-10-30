@@ -51,9 +51,13 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Account does not exist"));
 
         if(account.getBalance() < amount) {
-            throw new RuntimeException("Insufficient Funds.")
+            throw new RuntimeException("Insufficient Funds.");
         }
 
-        return null;
+        double total = account.getBalance() - amount;
+        account.setBalance(total);
+        Account savedAccount = accountRepository.save(account);
+
+        return AccountMapper.mapToAcountDto(savedAccount);
     }
 }
